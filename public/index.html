@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+ 
+<html>
+    <head>
+        <title>Reservation</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="mystyle.css">        
+    </head>
+    
+    <body>
+        <h1>TIMES</h1>
+        <table>
+            <tr><td><button class="timeSlot">09:00 am - 10:00 am</button></td></tr>
+            <tr><td><button class="timeSlot">10:00 am - 11:00 am</button></td></tr>
+            <tr><td><button class="timeSlot">11:00 am - 12:00 pm</button></td></tr>
+            <tr><td><button class="timeSlot">12:00 pm - 01:00 pm</button></td></tr>
+            <tr><td><button class="timeSlot">01:00 pm - 02:00 pm</button></td></tr>
+            <tr><td><button class="timeSlot">02:00 pm - 03:00 pm</button></td></tr>
+            <tr><td><button class="timeSlot">03:00 pm - 04:00 pm</button></td></tr>
+            <tr><td><button class="timeSlot">04:00 pm - 05:00 pm</button></td></tr>
+        </table>
+        
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">&times</span>
+              <h2>Please fill out the following information</h2>
+            </div>
+            <div class="modal-body">
+              <form>
+                  Name:<br>
+                  <input type="text" name="fname" id="fname"><br>
+                  Phone Number<br>
+                  <input type="tel" name="phone" id="phone"><br>
+              </form>
+            </div>
+            <div class="modal-footer">
+                <button id="formSubmit" style="background: white">Complete</button>
+            </div>
+          </div>
+        </div>
+        
+        <script type="text/javascript">  
+            //put all time slots buttons in an array
+            var slots = document.getElementsByClassName('timeSlot');
+            var r = [slots.length];
+            
+            //Create a new reservation object for each time slot
+            for(var i=0;i<slots.length;i++){
+                r[i] = new Reservation("","",slots[i]);
+            }
+            
+            //reservation object
+            function Reservation(name,number,button){
+                this.name=name;
+                this.number=number;
+                this.element = button;
+                this.element.addEventListener("click",this,false);
+            }
+            
+            //Handle the events
+            Reservation.prototype.handleEvent = function(e){
+                switch(e.type){
+                    case "click" : this.click(e);
+                }
+            };
+            
+            //click event for each reservation
+            Reservation.prototype.click = function(){
+                /*fill the modal pop up fields with data from the 
+                 * reservation the user just clicked on
+                 */
+                document.getElementById("fname").value = this.name;
+                document.getElementById("phone").value = this.number;
+                //show modal
+                modal.style.display = "block";
+                /*On clicking the complete button in the modal form
+                 * the data in the forms will be saved to the reservation
+                 * object.
+                 */
+                document.getElementById("formSubmit").onclick = function(){
+                    this.name=document.getElementById("fname").value;
+                    this.number=document.getElementById("phone").value;
+                    changeButtonColor(this);
+                    modal.style.display = "none";
+                }.bind(this);
+            };
+            
+            //Changes the color of the button based on whether the "name" and "number" field is populated 
+            function changeButtonColor(Reservation){
+                if((Reservation.name !== "" && Reservation.name !== null) || (Reservation.number !== "" && Reservation.number !== null)){
+                    Reservation.element.style.background='#f44336';
+                }else{
+                    Reservation.element.style.background='#4CAF50';
+                }
+            }
+            
+            // Get the modal
+            var modal = document.getElementById('myModal');
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            };
+
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            };
+        </script>
+    </body>
+</html>
